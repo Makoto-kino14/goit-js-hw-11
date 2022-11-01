@@ -7,10 +7,14 @@ axios.defaults.baseURL = 'https://pixabay.com/api/';
 const KEY = '30973479-d1f87e7b56efee65475fcf435';
 
 async function fetchImages(query, page, perPage) {
-  const response = await axios.get(
-    `?key=${KEY}&q=${query}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=${perPage}`
-  );
-  return response;
+  try {
+    const response = await axios.get(
+      `?key=${KEY}&q=${query}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=${perPage}`
+    );
+    return response;
+  } catch (errors) {
+    console.error(errors);
+  }
 }
 
 const gallery = document.querySelector('.gallery');
@@ -101,7 +105,7 @@ function onLoadMoreBtn() {
 
       const totalPages = Math.ceil(data.totalHits / perPage);
 
-      if (page > totalPages) {
+      if ((data.hits.length < 40) & (data.hits.length !== 0)) {
         loadMoreBtn.classList.add('is-hidden');
         alertEndOfSearch();
       }
